@@ -1,229 +1,167 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta name="x-poe-datastore-behavior" content="local_only">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>集友银行团队联系人信息</title>
+    <title>集友银行金融市场部团队</title>
     <style>
-        /* --- 全局样式 --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             background-color: #f4f7f9;
             margin: 0;
             padding: 20px;
             color: #333;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
-
-        /* --- 主容器 --- */
         .container {
             max-width: 700px;
             margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
+            background:#fff;
+            border-radius:12px;
+            box-shadow:0 8px 25px rgba(0,0,0,0.08);
+            overflow:hidden;
         }
-
-        /* --- 头部标题 --- */
         .header {
-            background-color: #A0225E;
-            color: white;
-            padding: 25px;
-            text-align: center;
+            background:#A0225E;
+            color:#fff;
+            padding:25px;
+            text-align:center;
         }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 600;
+        .header h1{margin:0;font-size:24px;font-weight:600;}
+        .header p{margin:5px 0 0;font-size:14px;opacity:0.9;}
+        .contact-list{padding:10px 20px 20px;}
+        .contact-card{
+            border-bottom:1px solid #e9ecef;
+            padding:20px 0;
         }
-        
-        .header p {
-            margin: 5px 0 0;
-            font-size: 14px;
-            opacity: 0.9;
+        .contact-card:last-child{border-bottom:none;}
+        .contact-card h2{
+            margin:0 0 5px;
+            font-size:20px;
+            color:#A0225E;
         }
-
-        /* --- 联系人卡片列表 --- */
-        .contact-list {
-            padding: 10px 20px 20px 20px;
+        .contact-card .position{
+            margin:0 0 15px;
+            font-size:16px;
+            color:#7A1847;
+            font-weight:500;
         }
-
-        /* --- 单个联系人卡片 --- */
-        .contact-card {
-            border-bottom: 1px solid #e9ecef;
-            padding: 20px 0;
+        .contact-info{
+            display:flex;
+            align-items:center;
+            margin-bottom:12px;
+            font-size:16px;
         }
-        
-        .contact-card:last-child {
-            border-bottom: none;
+        .contact-info svg{
+            width:20px;
+            height:20px;
+            margin-right:12px;
+            fill:#555;
+            flex-shrink:0;
         }
-
-        .contact-card h2 {
-            margin: 0 0 5px 0;
-            font-size: 20px;
-            color: #A0225E; /* 名字颜色，与头部匹配 */
+        .contact-info a{
+            color:#333;
+            text-decoration:none;
+            word-break:break-all;
         }
-
-        .contact-card .position {
-            margin: 0 0 15px 0;
-            font-size: 16px;
-            color: #7A1847; /* 职位颜色，相似但稍暗的酒红色调 */
-            font-weight: 500;
-        }
-
-        .contact-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 16px;
-        }
-
-        .contact-info svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
-            fill: #555;
-            flex-shrink: 0;
-        }
-
-        .contact-info a {
-            color: #333;
-            text-decoration: none;
-            word-break: break-all;
-        }
-        
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-
-        .contact-info span {
-            color: #333;
-            word-break: break-all;
-        }
+        .contact-info a:hover{text-decoration:underline;}
     </style>
+
+    <!-- 关键：微信环境显示微信地图链接，其他环境显示 Google Maps -->
+    <script>
+        if (/MicroMessenger/i.test(navigator.userAgent)) {
+            document.querySelectorAll('.wechat-only').forEach(el => el.style.display = 'inline');
+            document.querySelectorAll('.other').forEach(el => el.style.display = 'none');
+        }
+    </script>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>集友银行金融市场部团队</h1>
-            <p>请随时与我们联系</p>
-        </div>
-
-        <div class="contact-list">
-            <!-- 成员1 -->
-            <div class="contact-card">
-                <h2>李元雄</h2>
-                <p class="position">金融市场部总经理</p>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg>
-                    <a href="tel:+85221879088">+852 21879088</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"></path></svg>
-                    <a href="mailto:kevinlee@chiyubank.com">kevinlee@chiyubank.com</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
-                    <a href="https://www.google.com/maps/search/?api=1&query=香港中环德辅道中78号"
-                       onclick="if(/MicroMessenger/i.test(navigator.userAgent)){event.preventDefault();location.href='https://uri.weixin.qq.com/map/search?action=show&query=香港中环德辅道中78号';}"
-                       style="color:#333;">
-                        香港中环德辅道中78号6楼
-                    </a>
-                </div>
-            </div>
-
-            <!-- 成员2 -->
-            <div class="contact-card">
-                <h2>倪轩</h2>
-                <p class="position">金融市场部副总经理</p>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg>
-                    <a href="tel:+85221879200">+852 21879200</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"></path></svg>
-                    <a href="mailto:nixuan@chiyubank.com">nixuan@chiyubank.com</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
-                    <a href="https://uri.weixin.qq.com/map/search?action=show&query=香港中环皇后大道中100号"
-                       onclick="if(!/MicroMessenger/i.test(navigator.userAgent)){location.href='https://www.google.com/maps/search/?api=1&query=香港中环皇后大道中100号';}"
-                       style="color:#333;">
-                        香港中环皇后大道中100号12楼
-                    </a>
-                </div>
-            </div>
-            
-            <!-- 成员3 -->
-            <div class="contact-card">
-                <h2>赵嘉贤</h2>
-                <p class="position">环球市场处处长</p>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg>
-                    <a href="tel:+85221879008">+852 21879008</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"></path></svg>
-                    <a href="mailto:chiukayin@chiyubank.com">chiukayin@chiyubank.com</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
-                    <a href="https://www.google.com/maps/search/?api=1&query=香港中环皇后大道中100号"
-                       onclick="if(/MicroMessenger/i.test(navigator.userAgent)){event.preventDefault();location.href='https://uri.weixin.qq.com/map/search?action=show&query=香港中环皇后大道中100号';}"
-                       style="color:#333;">
-                        香港中环皇后大道中100号12楼
-                    </a>
-                </div>
-            </div>
-
-            <!-- 成员4 -->
-            <div class="contact-card">
-                <h2>林凤娇</h2>
-                <p class="position">金融机构部副处长</p>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg>
-                    <a href="tel:+85221879280">+852 21879280</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"></path></svg>
-                    <a href="mailto:linfungkiu@chiyubank.com">linfungkiu@chiyubank.com</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
-                    <a href="https://www.google.com/maps/search/?api=1&query=香港中环德辅道中78号"
-                       onclick="if(/MicroMessenger/i.test(navigator.userAgent)){event.preventDefault();location.href='https://uri.weixin.qq.com/map/search?action=show&query=香港中环德辅道中78号';}"
-                       style="color:#333;">
-                        香港中环德辅道中78号6楼
-                    </a>
-                </div>
-            </div>
-
-            <!-- 成员5 -->
-            <!--<div class="contact-card">
-                <h2>王五</h2>
-                <p class="position">xxx</p>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"></path></svg>
-                    <a href="tel:+8615800158000">+852 00000000</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"></path></svg>
-                    <a href="mailto:wangwu@example.com">wangwu@example.com</a>
-                </div>
-                <div class="contact-info">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
-                    <span>wangwu_design</span>
-                </div>
-            </div>-->
-
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>集友银行金融市场部团队</h1>
+        <p>请随时与我们联系</p>
     </div>
+
+    <div class="contact-list">
+
+        <!-- 李元雄 -->
+        <div class="contact-card">
+            <h2>李元雄</h2>
+            <p class="position">金融市场部总经理</p>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                <a href="tel:+85221879088">+852 21879088</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"/></svg>
+                <a href="mailto:kevinlee@chiyubank.com">kevinlee@chiyubank.com</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
+                <a href="weixin://dl/business/?t=map&query=香港中环德辅道中78号6楼" target="_blank" class="wechat-only" style="color:#333;display:none;">香港中环德辅道中78号6楼</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=香港中环德辅道中78号6楼" target="_blank" class="other" style="color:#333;">香港中环德辅道中78号6楼</a>
+            </div>
+        </div>
+
+        <!-- 倪轩 -->
+        <div class="contact-card">
+            <h2>倪轩</h2>
+            <p class="position">金融市场部副总经理</p>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                <a href="tel:+85221879200">+852 21879200</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"/></svg>
+                <a href="mailto:nixuan@chiyubank.com">nixuan@chiyubank.com</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
+                <a href="weixin://dl/business/?t=map&query=香港中环皇后大道中100号12楼" target="_blank" class="wechat-only" style="color:#333;display:none;">香港中环皇后大道中100号12楼</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=香港中环皇后大道中100号12楼" target="_blank" class="other" style="color:#333;">香港中环皇后大道中100号12楼</a>
+            </div>
+        </div>
+
+        <!-- 赵嘉贤 -->
+        <div class="contact-card">
+            <h2>赵嘉贤</h2>
+            <p class="position">环球市场处处长</p>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                <a href="tel:+85221879008">+852 21879008</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"/></svg>
+                <a href="mailto:chiukayin@chiyubank.com">chiukayin@chiyubank.com</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
+                <a href="weixin://dl/business/?t=map&query=香港中环皇后大道中100号12楼" target="_blank" class="wechat-only" style="color:#333;display:none;">香港中环皇后大道中100号12楼</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=香港中环皇后大道中100号12楼" target="_blank" class="other" style="color:#333;">香港中环皇后大道中100号12楼</a>
+            </div>
+        </div>
+
+        <!-- 林凤娇 -->
+        <div class="contact-card">
+            <h2>林凤娇</h2>
+            <p class="position">金融机构部副处长</p>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/></svg>
+                <a href="tel:+85221879280">+852 21879280</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6M20 6L12 11L4 6H20M20 18H4V8L12 13L20 8V18Z"/></svg>
+                <a href="mailto:linfungkiu@chiyubank.com">linfungkiu@chiyubank.com</a>
+            </div>
+            <div class="contact-info">
+                <svg viewBox="0 0 24 24"><path d="M12,2C8.13,2 5,5.13 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9C19,5.13 15.87,2 12,2M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5Z"/></svg>
+                <a href="weixin://dl/business/?t=map&query=香港中环德辅道中78号6楼" target="_blank" class="wechat-only" style="color:#333;display:none;">香港中环德辅道中78号6楼</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=香港中环德辅道中78号6楼" target="_blank" class="other" style="color:#333;">香港中环德辅道中78号6楼</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>
